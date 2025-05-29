@@ -4,11 +4,10 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "readme-generator.generate",
     async () => {
-
       /**
        *
-       * 
        * Check if the active text editor is open and if the file is a README.md
+       *
        */
       const editor = vscode.window.activeTextEditor;
       if (!editor || !editor.document.fileName.endsWith("README.md")) {
@@ -20,8 +19,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       /**
        *
-       * 
        * Check if the OpenAI API key is set in the workspace settings
+       *
        */
       const config = vscode.workspace.getConfiguration("readme-generator");
       const apiKey = config.get<string>("openaiApiKey");
@@ -34,8 +33,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       /**
        *
-       * 
        * Prompt the user for input to generate the README.md content
+       *
        */
       const userInput = await vscode.window.showInputBox({
         prompt:
@@ -45,8 +44,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       /**
        *
-       * 
        * Validate user input
+       *
        */
       const trimmedInput = userInput?.trim();
       if (!trimmedInput) {
@@ -69,8 +68,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       /**
        *
-       * 
        * Generate text on the point of the cursor in the README.md file
+       *
        */
       const position = editor.selection.active;
       editor.edit((editBuilder) => {
