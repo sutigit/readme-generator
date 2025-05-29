@@ -1,6 +1,6 @@
 # readme-generator README
 
-LLM powered README.md generator for your project.
+LLM powered README.md generator.
 
 ## Features
 
