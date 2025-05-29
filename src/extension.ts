@@ -11,8 +11,8 @@ export function activate(context: vscode.ExtensionContext) {
 
         // Ask user for input
         const userInput = await vscode.window.showInputBox({
-            prompt: 'Enter the text to insert into the README.md',
-            placeHolder: 'e.g., 🚀 Hello, world!',
+            prompt: 'Enter some descriptive prompt to start generating README.md',
+            placeHolder: 'My awesome project',
         });
 
         // If user cancels or inputs nothing
