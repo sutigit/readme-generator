@@ -26,8 +26,18 @@
           "group": "navigation"
         }
       ]
-    }
-
+    },
+    "configuration": {
+        "title": "OpenAI API key",
+        "properties": {
+          "readme-generator.openaiApiKey": {
+            "type": "string",
+            "default": "",
+            "description": "Your OpenAI API key. This will be used to call the OpenAI API.",
+            "markdownDescription": "Enter your [OpenAI API key](https://platform.openai.com/account/api-keys)."
+          }
+        }
+      }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
