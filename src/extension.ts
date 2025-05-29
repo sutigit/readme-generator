@@ -6,9 +6,9 @@ export function activate(context: vscode.ExtensionContext) {
     async () => {
 
       /**
+       *
        * 
        * Check if the active text editor is open and if the file is a README.md
-       * 
        */
       const editor = vscode.window.activeTextEditor;
       if (!editor || !editor.document.fileName.endsWith("README.md")) {
@@ -19,9 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       /**
+       *
        * 
        * Check if the OpenAI API key is set in the workspace settings
-       * 
        */
       const config = vscode.workspace.getConfiguration("readme-generator");
       const apiKey = config.get<string>("openaiApiKey");
@@ -33,26 +33,44 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       /**
+       *
        * 
        * Prompt the user for input to generate the README.md content
-       * 
        */
       const userInput = await vscode.window.showInputBox({
-        prompt: "Enter some descriptive prompt to start generating README.md",
+        prompt:
+          "Describe your project or the README content you want to generate",
         placeHolder: "My awesome project",
       });
-      if (!userInput) {
+
+      /**
+       *
+       * 
+       * Validate user input
+       */
+      const trimmedInput = userInput?.trim();
+      if (!trimmedInput) {
         vscode.window.showInformationMessage(
           "Prompt was not entered. Operation canceled."
         );
         return;
       }
-
+      if (trimmedInput.length > 500) {
+        vscode.window.showWarningMessage(
+          "Input too long. Please shorten it. Max 500 characters."
+        );
+        return;
+      }
+      const safeInput = trimmedInput.replace(/[<>:"/\\|?*\x00-\x1F]/g, "");
+      if (!/^[a-zA-Z0-9\s.,'-]+$/.test(safeInput)) {
+        vscode.window.showErrorMessage("Input contains invalid characters.");
+        return;
+      }
 
       /**
+       *
        * 
        * Generate text on the point of the cursor in the README.md file
-       * 
        */
       const position = editor.selection.active;
       editor.edit((editBuilder) => {
@@ -63,3 +81,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(disposable);
 }
+
+// This method is called when extension is deactivated
+export function deactivate() {}
