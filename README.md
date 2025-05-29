@@ -1,6 +1,6 @@
-# readme-generator README
+# LLM powered README.md generator.
 
-LLM powered README.md generator.
+--
 
 ## Features
 
@@ -18,8 +18,7 @@ LLM powered README.md generator.
 
 --
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
 ## Release Notes
 
+--
 
