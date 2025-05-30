@@ -9,6 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "readme-generator.generate",
     async () => {
+      
       /**
        *
        * Check if the active text editor is open and if the file is a README.md
