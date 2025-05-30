@@ -1,5 +1,5 @@
 const getMainFiles = async () => {
-    return "";
+    return "main files";
 };
 
 export default getMainFiles;

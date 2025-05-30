@@ -1,5 +1,5 @@
-const getFileStructure = async () => {
-    return "";
+const getPackageJsonData = async () => {
+    return "package.json";
 };
 
-export default getFileStructure;
+export default getPackageJsonData;

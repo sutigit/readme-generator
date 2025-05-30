@@ -1,5 +1,5 @@
 const getFolderStructure = async () => {
-    return "";
+    return "folder structure";
 };
 
 export default getFolderStructure;
