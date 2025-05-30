@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
 import generateContent from "./utils/generateContent";
+import showMessage from "./utils/errorMessage";
+import getPackageJsonData from "./utils/getPackageJsonData";
+import getFolderStructure from "./utils/getFolderStructure";
+import getMainFiles from "./utils/getMainFiles";
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
@@ -12,7 +16,8 @@ export function activate(context: vscode.ExtensionContext) {
        */
       const editor = vscode.window.activeTextEditor;
       if (!editor || !editor.document.fileName.endsWith("README.md")) {
-        vscode.window.showInformationMessage(
+        showMessage(
+          "information",
           "Open a README.md file to use this command."
         );
         return;
@@ -26,7 +31,8 @@ export function activate(context: vscode.ExtensionContext) {
       const config = vscode.workspace.getConfiguration("readme-generator");
       const apiKey = config.get<string>("openaiApiKey");
       if (!apiKey) {
-        vscode.window.showWarningMessage(
+        showMessage(
+          "warning",
           "Please set your OpenAI API key in settings to use this feature."
         );
         return;
@@ -50,58 +56,108 @@ export function activate(context: vscode.ExtensionContext) {
        */
       const trimmedInput = userInput?.trim();
       if (!trimmedInput) {
-        vscode.window.showInformationMessage(
+        showMessage(
+          "information",
           "Prompt was not entered. Operation canceled."
         );
         return;
       }
       if (trimmedInput.length > 500) {
-        vscode.window.showWarningMessage(
+        showMessage(
+          "warning",
           "Input too long. Please shorten it. Max 500 characters."
         );
         return;
       }
       const safeInput = trimmedInput.replace(/[<>:"/\\|?*\x00-\x1F]/g, "");
       if (!/^[a-zA-Z0-9\s.,'-]+$/.test(safeInput)) {
-        vscode.window.showErrorMessage("Input contains invalid characters.");
+        showMessage(
+          "error","Input contains invalid characters.");
         return;
       }
 
       /**
-       * 
-       * 
-       * Analyze package.json
-       * 
+       *
+       *
+       * Generate README.md content from user input, package.json, folder structure, and main files.
+       *
        */
+      const content = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification, // or .Window or .SourceControl
+          title: "Generating README.md content...",
+          cancellable: true,
+        },
+        async (progress) => {
+          progress.report({ increment: 0 });
 
-      /**
-       * 
-       * 
-       * Analyze folder structure
-       * 
-       */
+          /**
+           *
+           * Parse package.json
+           */
+          const packageJsonData = await getPackageJsonData();
+          if (!packageJsonData) {
+            showMessage(
+              "error",
+              "Failed to read package.json. Please ensure it exists in the workspace."
+            );
+            return;
+          }
 
-      /**
-       * 
-       * 
-       * Analyze main files
-       * 
-       */
+          progress.report({ increment: 10 });
 
-      /**
-       * 
-       * 
-       * Generate README.md content using LLM's text generation api
-       * 
-       */
-      const content = await generateContent({
-        packageJson: {}, // Placeholder for package.json analysis
-        folderStructure: [], // Placeholder for folder structure analysis
-        mainFiles: [], // Placeholder for main files analysis
-        userInput: safeInput,
-      });
+          /**
+           *
+           * Parse folder structure
+           */
+          const folderStructure = await getFolderStructure();
+          if (!folderStructure) {
+            showMessage(
+              "error",
+              "Failed to read folder structure. Please ensure you have access to the workspace."
+            );
+            return;
+          }
 
-      console.log("Generated content:", content);
+          progress.report({ increment: 30 });
+
+          /**
+           *
+           * Parse main files
+           */
+          const mainFiles = await getMainFiles();
+          if (!mainFiles) {
+            showMessage(
+              "error",
+              "Failed to read main files. Please ensure you have access to the workspace."
+            );
+            return;
+          }
+
+          progress.report({ increment: 50 });
+
+          /**
+           *
+           * Generate the content
+           */
+          const data = await generateContent({
+            packageJson: {},
+            folderStructure: [],
+            mainFiles: [],
+            userInput: safeInput,
+          });
+          if (!data) {
+            showMessage(
+              "error",
+              "Failed to generate content. Please try again."
+            );
+            return;
+          }
+
+          progress.report({ increment: 100 });
+          return data;
+        }
+      );
 
       /**
        *
@@ -110,7 +166,7 @@ export function activate(context: vscode.ExtensionContext) {
        */
       const position = editor.selection.active;
       editor.edit((editBuilder) => {
-        editBuilder.insert(position, `\n\n${content}\n`);
+        editBuilder.insert(position, content!);
       });
     }
   );
