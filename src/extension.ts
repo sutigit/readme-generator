@@ -96,8 +96,8 @@ export function activate(context: vscode.ExtensionContext) {
            *
            * Parse package.json
            */
-          const packageJsonData = await getPackageJsonData();
-          if (!packageJsonData) {
+          const packageJson = await getPackageJsonData();
+          if (!packageJson) {
             showMessage(
               "error",
               "Failed to read package.json. Please ensure it exists in the workspace."
@@ -140,9 +140,9 @@ export function activate(context: vscode.ExtensionContext) {
            */
           const data = await generateContent({
             apiKey,
-            packageJson: {},
-            folderStructure: [],
-            mainFiles: [],
+            packageJson,
+            folderStructure,
+            mainFiles,
             userInput: safeInput,
           });
           if (!data) {

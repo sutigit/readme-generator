@@ -8,9 +8,9 @@ const generateContent = async ({
   userInput,
 }: {
   apiKey: string;
-  packageJson: Record<string, any>;
-  folderStructure: string[];
-  mainFiles: string[];
+  packageJson: string;
+  folderStructure: string;
+  mainFiles: string;
   userInput: string;
 }) => {
   try {
