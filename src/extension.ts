@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "readme-generator.generate",
     async () => {
-      
+
       /**
        *
        * Check if the active text editor is open and if the file is a README.md
@@ -104,7 +104,6 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-
           progress.report({ increment: 10 });
 
           /**
@@ -119,7 +118,6 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-
           progress.report({ increment: 30 });
 
           /**
@@ -134,7 +132,6 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-
           progress.report({ increment: 50 });
 
           /**
@@ -142,6 +139,7 @@ export function activate(context: vscode.ExtensionContext) {
            * Generate the content
            */
           const data = await generateContent({
+            apiKey,
             packageJson: {},
             folderStructure: [],
             mainFiles: [],
@@ -154,8 +152,9 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-
           progress.report({ increment: 100 });
+
+          
           return data;
         }
       );
