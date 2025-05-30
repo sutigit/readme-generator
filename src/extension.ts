@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import generateContent from "./utils/generateContent";
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
@@ -67,13 +68,49 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       /**
+       * 
+       * 
+       * Analyze package.json
+       * 
+       */
+
+      /**
+       * 
+       * 
+       * Analyze folder structure
+       * 
+       */
+
+      /**
+       * 
+       * 
+       * Analyze main files
+       * 
+       */
+
+      /**
+       * 
+       * 
+       * Generate README.md content using LLM's text generation api
+       * 
+       */
+      const content = await generateContent({
+        packageJson: {}, // Placeholder for package.json analysis
+        folderStructure: [], // Placeholder for folder structure analysis
+        mainFiles: [], // Placeholder for main files analysis
+        userInput: safeInput,
+      });
+
+      console.log("Generated content:", content);
+
+      /**
        *
        * Generate text on the point of the cursor in the README.md file
        *
        */
       const position = editor.selection.active;
       editor.edit((editBuilder) => {
-        editBuilder.insert(position, `\n\n${userInput}`);
+        editBuilder.insert(position, `\n\n${content}\n`);
       });
     }
   );
