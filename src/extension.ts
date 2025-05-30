@@ -118,7 +118,7 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-          progress.report({ increment: 30 });
+          progress.report({ increment: 20 });
 
           /**
            *
@@ -132,7 +132,7 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-          progress.report({ increment: 50 });
+          progress.report({ increment: 20 });
 
           /**
            *
@@ -152,7 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
             );
             return;
           }
-          progress.report({ increment: 100 });
+          progress.report({ increment: 50 });
 
           
           return data;
