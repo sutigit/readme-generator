@@ -54,7 +54,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test",
-    "toimiiko": "ts-node src/scripts/sandbox.ts"
+    "sandbox": "ts-node src/scripts/sandbox.ts"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
